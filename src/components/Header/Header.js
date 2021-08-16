@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import styles from "./header.module.css";
 import brandLogo from "../../static/images/a-logo.png";
 import asd from "../../static/images/Product.png";
@@ -15,21 +15,45 @@ class Header extends React.Component {
     this.state = {
       currencyBar: false,
       cartBar: false,
+      small: true,
+      medium: false,
     };
+    this.wrapperRef = createRef();
+    this.handleClickOutside = this.handleClickOutside.bind(this);
 
     this.toggleCurrencyBar = this.toggleCurrencyBar.bind(this);
     this.toggleCartBar = this.toggleCartBar.bind(this);
+    this.toggleSmall = this.toggleSmall.bind(this);
+    this.toggleMedium = this.toggleMedium.bind(this);
   }
+  ////////////////////////
+
+  ////////////////////////
 
   toggleCurrencyBar() {
     this.setState({
       currencyBar: !this.state.currencyBar,
+      cartBar: false,
     });
   }
-
   toggleCartBar() {
     this.setState({
       cartBar: !this.state.cartBar,
+      currencyBar: false,
+    });
+  }
+
+  toggleSmall() {
+    this.setState({
+      small: true,
+      medium: false,
+    });
+  }
+
+  toggleMedium() {
+    this.setState({
+      small: false,
+      medium: true,
     });
   }
 
@@ -60,21 +84,18 @@ class Header extends React.Component {
           </NavLink>
         </div>
 
-        <div className={styles.cart}>
+        <div className={styles.cart} onClick={this.handleClickOutside}>
           <div
+            ref={this.wrapperRef}
             className={
-              this.state.currencyBar
+              !this.state.currencyBar
                 ? `${styles.currency__toggle} ${styles.currency__active}`
                 : styles.currency__toggle
             }
           >
             {currencyData.map((item) => {
               return (
-                <div
-                  key={item.id}
-                  onClick={this.toggleCurrencyBar}
-                  className={styles.test}
-                >
+                <div key={item.id} onClick={this.toggleCurrencyBar}>
                   <span>{item.symbol}</span>
                   <span>{item.name}</span>
                 </div>
@@ -84,7 +105,7 @@ class Header extends React.Component {
           <div onClick={this.toggleCurrencyBar} className={styles.cart__left}>
             <span>$</span>
             <span>
-              {this.state.currencyBar ? (
+              {!this.state.currencyBar ? (
                 <IoIosArrowDown size={10} />
               ) : (
                 <IoIosArrowUp size={10} />
@@ -93,10 +114,16 @@ class Header extends React.Component {
           </div>
 
           <div className={styles.cart__right}>
-            <FiShoppingCart />
+            <FiShoppingCart onClick={this.toggleCartBar} />
           </div>
 
-          <div className={styles.cart__bar}>
+          <div
+            className={
+              this.state.cartBar
+                ? styles.cart__bar
+                : `${styles.cart__bar} ${styles.cart__bart__active}`
+            }
+          >
             <div className={styles.cart__bar__container}>
               <p className={styles.bag__items}>
                 <b>My Bag</b>, 2 items
@@ -120,8 +147,18 @@ class Header extends React.Component {
 
                   <div className={styles.size__minus}>
                     <div className={styles.sizing}>
-                      <span>S</span>
-                      <span>M</span>
+                      <span
+                        onClick={this.toggleSmall}
+                        className={this.state.small ? `${styles.small}` : null}
+                      >
+                        S
+                      </span>
+                      <span
+                        onClick={this.toggleMedium}
+                        className={this.state.medium ? `${styles.small}` : null}
+                      >
+                        M
+                      </span>
                     </div>
                     <AiOutlineMinusSquare size={35} />
                   </div>
@@ -129,6 +166,14 @@ class Header extends React.Component {
                 <div className={styles.product__image}>
                   <img src={asd} alt="product" />
                 </div>
+              </div>
+              <div className={styles.total__value}>
+                <p>Total</p>
+                <p>$100.00</p>
+              </div>
+              <div className={styles.button__container}>
+                <button className={styles.view__bag}>VIEW BAG</button>
+                <button className={styles.check__out}>CHECK OUT</button>
               </div>
             </div>
           </div>
