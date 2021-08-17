@@ -39,9 +39,6 @@ function Main() {
     func();
   }, []);
 
-  console.log(item);
-  console.log(item.gallery);
-
   return (
     <div>
       <h1>{item.id}</h1>
@@ -49,7 +46,7 @@ function Main() {
       {item.description}
       {item.gallery &&
         item?.gallery.map((i) => {
-          return <img src={i} alt="323" />;
+          return <img src={i} alt="323" key={i} />;
         })}
     </div>
   );

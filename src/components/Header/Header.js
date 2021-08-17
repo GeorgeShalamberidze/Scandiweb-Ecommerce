@@ -17,18 +17,40 @@ class Header extends React.Component {
       cartBar: false,
       small: true,
       medium: false,
+      backgroundBlur: false,
     };
-    this.wrapperRef = createRef();
-    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.barRef = createRef();
+    this.cartRef = createRef();
+
+    this.handleCartClick = this.handleCartClick.bind(this);
 
     this.toggleCurrencyBar = this.toggleCurrencyBar.bind(this);
     this.toggleCartBar = this.toggleCartBar.bind(this);
     this.toggleSmall = this.toggleSmall.bind(this);
     this.toggleMedium = this.toggleMedium.bind(this);
   }
-  ////////////////////////
 
-  ////////////////////////
+  handleCartClick(e) {
+    if (this.cartRef && !this.cartRef.current.contains(e.target)) {
+      this.setState({
+        cartBar: false,
+        backgroundBlur: false,
+      });
+    }
+    if (this.barRef && !this.barRef.current.contains(e.target)) {
+      this.setState({
+        currencyBar: false,
+      });
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleCartClick);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleCartClick);
+  }
 
   toggleCurrencyBar() {
     this.setState({
@@ -39,10 +61,10 @@ class Header extends React.Component {
   toggleCartBar() {
     this.setState({
       cartBar: !this.state.cartBar,
+      backgroundBlur: !this.state.backgroundBlur,
       currencyBar: false,
     });
   }
-
   toggleSmall() {
     this.setState({
       small: true,
@@ -61,6 +83,11 @@ class Header extends React.Component {
     return (
       <div className={styles.headerContainer}>
         <div className={styles.sections}>
+          <div
+            className={
+              this.state.backgroundBlur ? styles.background__blur : null
+            }
+          ></div>
           <ul>
             {navData.map((item) => {
               return (
@@ -84,9 +111,13 @@ class Header extends React.Component {
           </NavLink>
         </div>
 
-        <div className={styles.cart} onClick={this.handleClickOutside}>
+        <div
+          className={styles.cart}
+          ref={this.cartRef}
+          onClick={this.clickDOWN}
+        >
           <div
-            ref={this.wrapperRef}
+            ref={this.barRef}
             className={
               !this.state.currencyBar
                 ? `${styles.currency__toggle} ${styles.currency__active}`
