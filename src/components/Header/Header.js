@@ -3,7 +3,6 @@ import styles from "./header.module.css";
 import brandLogo from "../../static/images/a-logo.png";
 import asd from "../../static/images/Product.png";
 import { NavLink } from "react-router-dom";
-import { navData, currencyData } from "./navData";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { BsPlusSquare } from "react-icons/bs";
@@ -56,6 +55,7 @@ class Header extends React.Component {
     this.setState({
       currencyBar: !this.state.currencyBar,
       cartBar: false,
+      backgroundBlur: false,
     });
   }
   toggleCartBar() {
@@ -80,6 +80,16 @@ class Header extends React.Component {
   }
 
   render() {
+    const currencyData = this.props.currency;
+    const currencySymbol = ["$", "£", "A$", "¥", "₽"];
+
+    const currencyDataWithSymbols = currencyData.map((x, i) => {
+      return {
+        name: x,
+        symbol: currencySymbol[i],
+      };
+    });
+
     return (
       <div className={styles.headerContainer}>
         <div className={styles.sections}>
@@ -89,12 +99,12 @@ class Header extends React.Component {
             }
           ></div>
           <ul>
-            {navData.map((item) => {
+            {this.props.category.map((item, id) => {
               return (
-                <li key={item.id}>
+                <li key={id}>
                   <NavLink
-                    to={item.route}
-                    className={styles.asd}
+                    to={`/${item.name}`}
+                    className={styles.category__navigation}
                     activeClassName={styles.activeLink}
                   >
                     {item.name}
@@ -106,7 +116,7 @@ class Header extends React.Component {
         </div>
 
         <div className={styles.brandLogo}>
-          <NavLink to="/women">
+          <NavLink to="/clothes">
             <img src={brandLogo} alt="brand logo" />
           </NavLink>
         </div>
@@ -124,9 +134,9 @@ class Header extends React.Component {
                 : styles.currency__toggle
             }
           >
-            {currencyData.map((item) => {
+            {currencyDataWithSymbols.map((item, id) => {
               return (
-                <div key={item.id} onClick={this.toggleCurrencyBar}>
+                <div key={id} onClick={this.toggleCurrencyBar}>
                   <span>{item.symbol}</span>
                   <span>{item.name}</span>
                 </div>

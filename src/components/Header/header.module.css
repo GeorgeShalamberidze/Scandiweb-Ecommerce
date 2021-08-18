@@ -23,6 +23,11 @@
   display: flex;
 }
 
+.category__navigation {
+  font-size: 22px;
+  font-weight: 600;
+}
+
 .sections li a {
   position: relative;
   padding: 0 20px;
@@ -35,13 +40,13 @@
 }
 
 .brandLogo {
-  margin-right: 200px;
+  margin-right: 150px;
 }
 
 .sections .activeLink {
   color: #5ece7b;
   border-bottom: #5ece7b 2px solid;
-  padding-bottom: 34px;
+  padding-bottom: 32px;
 }
 
 .cart {
